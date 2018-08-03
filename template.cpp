@@ -1,27 +1,4 @@
-# include <iostream>
-# include <algorithm>
-# include <vector>
-# include <string>
-# include <set>
-# include <map>
-# include <cmath>
-# include <iomanip>
-# include <functional>
-# include <utility>
-# include <stack>
-# include <queue>
-# include <list>
-# include <tuple>
-# include <unordered_map>
-# include <numeric>
-# include <complex>
-# include <bitset>
-# include <random>
-# include <chrono>
-# include <cstdlib>
-# include <tuple>
-# include <array>
-# include <random>
+# include "bits/stdc++.h"
 using namespace std;
 using LL = long long;
 using ULL = unsigned long long;
