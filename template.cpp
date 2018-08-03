@@ -25,14 +25,9 @@
 using namespace std;
 using LL = long long;
 using ULL = unsigned long long;
-using D = double;
-constexpr int INF = 2147483647;
-constexpr int HINF = INF / 2;
-constexpr double DINF = 100000000000000000.0;
-constexpr double HDINF = 50000000000000000.0;
-constexpr long long LINF = 9223372036854775807;
-constexpr long long HLINF = 4500000000000000000;
 const double PI = acos(-1);
+template<class T>constexpr T INF() {return ::std::numeric_limits<T>::max();}
+template<class T>constexpr T HINF() {return INF<T>() / 2;}
 template <typename T_char>T_char TL(T_char cX) { return tolower(cX); };
 template <typename T_char>T_char TU(T_char cX) { return toupper(cX); };
 typedef pair<LL, LL> pii;
