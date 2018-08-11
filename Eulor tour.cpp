@@ -1,4 +1,6 @@
 #include "bits/stdc++.h"
+using namespace std;
+
 
 //オイラーツアー
 //木を根からDFSするときに通過する頂点を一直線に並べたもの
