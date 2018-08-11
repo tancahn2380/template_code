@@ -7,7 +7,6 @@ template<class T>constexpr T INF() {return ::std::numeric_limits<T>::max();}
 template<class T>constexpr T HINF() {return INF<T>() / 2;}
 template <typename T_char>T_char TL(T_char cX) { return tolower(cX); };
 template <typename T_char>T_char TU(T_char cX) { return toupper(cX); };
-typedef pair<LL, LL> pii;
 const int vy[] = { -1, -1, -1, 0, 1, 1, 1, 0 }, vx[] = { -1, 0, 1, 1, 1, 0, -1, -1 };
 const int dx[4] = { 0,1,0,-1 }, dy[4] = { 1,0,-1,0 };
 int popcnt(unsigned long long n) { int cnt = 0; for (int i = 0; i < 64; i++)if ((n >> i) & 1)cnt++; return cnt; }
