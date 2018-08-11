@@ -43,3 +43,25 @@ int sieve(int n) {
 	}
 	return p;
 }
+
+
+//素因数分解
+vector<LL> PrimeFact(LL n) {
+	vector<LL> res;
+	while (n != 1) {
+		if (n == 2 || n == 3) {
+			res.emplace_back(n); n /= n;
+			continue;
+		}
+		bool prime_flag = false;
+		for (int i = 2; i*i <= n; i++) {
+			if (n%i == 0) {
+				res.emplace_back(i); n /= i;
+				prime_flag = true;
+				break;
+			}
+		}
+		if (!prime_flag) { res.emplace_back(n); n /= n; }
+	}
+	return res;
+}
