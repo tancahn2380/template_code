@@ -19,7 +19,7 @@ struct BIT {
 		return s;
 	}
 	void add(int i, LL x) {
-		while (i <= 202020) {
+		while (i <= bit.size()) {
 			bit[i] += x;
 			i += i& -i;
 		}
