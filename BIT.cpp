@@ -5,9 +5,10 @@ using namespace std;
 //1-indexdであることに注意する
 
 struct BIT {
-	int bit[202020];
-	BIT() {
-		for (int i = 0; i < 202020;i++)bit[i] = 0;
+	vector<int> bit;
+	BIT(int n) {
+		bit.resize(n);
+		for (int i = 0; i < n; i++)bit[i] = 0;
 	}
 	int sum(int i) {
 		int s = 0;
@@ -26,6 +27,6 @@ struct BIT {
 };
 
 int main() {
-	BIT bit;
+	BIT bit(n);
 	cout << bit.sum(5) << endl;
 }
