@@ -45,11 +45,10 @@ bool same(int x, int y) {
 }
 /* コピペ用
 struct UnionFind {
-
-	int Par[100000];
-	int Rank[100000];
-
+	vector<int>Par, Rank;
 	UnionFind(int n) {
+		Par.resize(n);
+		Rank.resize(n);
 		for (int i = 0; i < n; i++) {
 			Par[i] = i;
 			Rank[i] = 0;
