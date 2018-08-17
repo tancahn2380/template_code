@@ -1,5 +1,6 @@
 #include "bits/stdc++.h"
 using namespace std;
+using LL = long long;
 
 
 //Makeprime(n)を呼びだすとnまでの素数の配列ができる
@@ -64,4 +65,15 @@ vector<LL> PrimeFact(LL n) {
 		if (!prime_flag) { res.emplace_back(n); n /= n; }
 	}
 	return res;
+}
+
+//単純な素数判定
+
+bool isprime(LL x) {
+	if (x == 2)return true;
+	if (x % 2 == 0)return false;
+	for (LL i = 3; i <= sqrt(x); i += 2) {
+		if (x%i == 0)return false;
+	}
+	return true;
 }
