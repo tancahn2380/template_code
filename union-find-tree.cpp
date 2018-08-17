@@ -44,40 +44,57 @@ bool same(int x, int y) {
 	return find(x) == find(y);
 }
 /* コピペ用
-int Par[100000];
-int Rank[100000];
+struct UnionFind {
 
-void init(int n) {
-	for (int i = 0; i < n; i++) {
-		Par[i] = i;
-		Rank[i] = 0;
-	}
-}
+	int Par[100000];
+	int Rank[100000];
 
-int find(int x) {
-	if (Par[x] == x) {
-		return x;
+	UnionFind(int n) {
+		for (int i = 0; i < n; i++) {
+			Par[i] = i;
+			Rank[i] = 0;
+		}
 	}
-	else {
-		return Par[x] = find(Par[x]);
-	}
-}
 
-void unite(int  x, int y) {
-	x = find(x);
-	y = find(y);
-	if (x == y) return;
-	if (Rank[x] < Rank[y]) {
-		Par[x] = y;
+	int find(int x) {
+		if (Par[x] == x) {
+			return x;
+		}
+		else {
+			return Par[x] = find(Par[x]);
+		}
 	}
-	else {
-		Par[y] = x;
-		if (Rank[x] == Rank[y])Rank[x]++;
-	}
-}
 
-bool same(int x, int y) {
-	return find(x) == find(y);
+	void unite(int  x, int y) {
+		x = find(x);
+		y = find(y);
+		if (x == y) return;
+		if (Rank[x] < Rank[y]) {
+			Par[x] = y;
+		}
+		else {
+			Par[y] = x;
+			if (Rank[x] == Rank[y])Rank[x]++;
+		}
+	}
+
+	bool same(int x, int y) {
+		return find(x) == find(y);
+	}
+};
+
+int main() {
+	int n;
+	cin >> n;
+	UnionFind uf(n);
+	int q;
+	cin >> q;
+	REP(i, q) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		if (a == 0)uf.unite(b, c);
+		else cout << uf.same(b, c) << endl;
+	}
 }
 */
 
