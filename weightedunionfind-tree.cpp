@@ -1,68 +1,86 @@
 #include "bits/stdc++.h"
 using LL = long long;
 
-
-//https://beta.atcoder.jp/contests/arc090/tasks/arc090_b
-template <typename T>
-struct WeightedUnionFind {
-	LL n;
-	T d;
-	vector<LL> r, p;
-	vector<T> ws;
-	WeightedUnionFind() {}
-	WeightedUnionFind(LL sz, T d_) :
-		n(sz), d(d_), r(n, 1), p(n), ws(n, d) {
-		iota(p.begin(), p.end(), 0);
+struct Weighted_Union_Find_Tree {
+	vector<int>Par, Rank,Diff_Weight;
+	Weighted_Union_Find_Tree(int n) {
+		Par.resize(n);
+		Rank.resize(n);
+		Diff_Weight.resize(n);
+		for (int i = 0; i < n; i++) {
+			Par[i] = i;
+			Rank[i] = 0;
+		}
 	}
-	LL find(LL x) {
-		if (x == p[x]) {
+
+	int find(int x) {
+		if (Par[x] == x) {
 			return x;
 		}
 		else {
-			LL t = find(p[x]);
-			ws[x] += ws[p[x]];
-			return p[x] = t;
+			int r = find(Par[x]);
+			Diff_Weight[x] += Diff_Weight[Par[x]];//累積和をとる
+			return Par[x] = r;
 		}
 	}
-	T weight(LL x) {
-		find(x);
-		return ws[x];
-	}
-	bool same(LL x, LL y) {
+
+	bool same(int x, int y) {
 		return find(x) == find(y);
 	}
-	void unite(LL x, LL y, T w) {
-		w += weight(x);
-		w -= weight(y);
-		x = find(x); y = find(y);
-		if (x == y) return;
-		if (r[x]<r[y]) swap(x, y), w = -w;
-		r[x] += r[y];
-		p[y] = x;
-		ws[y] = w;
+
+	int weight(int x) {
+		find(x);//経路圧縮
+		return Diff_Weight[x];
 	}
-	T diff(LL x, LL y) {
+
+	int diff(int x, int y) {
 		return weight(y) - weight(x);
+	}
+
+	// weight(y) - weight(x) = w となるように merge する
+	bool merge(int x, int y, int w) {
+		// x と y それぞれについて、 root との重み差分を補正
+		w += weight(x); w -= weight(y);
+
+		// x と y の root へ (x と y が既につながっていたら false を返すようにした)
+		x = find(x); y = find(y);
+		if (x == y) return false;
+
+		// Rank[x] >= Rank[y] となるように x と y を swap (それに合わせて w も符号反転します)
+		if (Rank[x] < Rank[y]) swap(x, y), w = -w;
+
+		// y (のroot) を x (のroot) の下にくっつける 
+		if (Rank[x] == Rank[y]) ++Rank[x];
+		Par[y] = x;
+
+		// x が y の親になるので、x と y の差分を diff_weight[y] に記録
+		Diff_Weight[y] = w;
+
+		return true;
 	}
 };
 
 int main() {
-	LL n, m;
-	cin >> n >> m;
-	WeightedUnionFind<LL> wuf(n + 1, 0);
-	for (LL i = 0; i<m; i++) {
-		LL l, r, d;
-		cin >> l >> r >> d;
-		l--; r--;
-		if (wuf.same(l, r)) {
-			if (wuf.diff(l, r) != d) {
-				cout << "No" << endl;
-				return 0;
-			}
+	int n, q;
+	cin >> n >> q;
+	Weighted_Union_Find_Tree uf(n);
+	REP(i, q){
+		int num;
+		cin >> num;
+		if (num == 0) {
+			int x, y, z;
+			cin >> x >> y >> z;
+			uf.merge(x, y, z);
 		}
 		else {
-			wuf.unite(l, r, d);
+			int x, y;
+			cin >> x >> y;
+			if (uf.same(x, y)) {
+				cout << uf.diff(x, y) << endl;
+			}
+			else {
+				cout << "?" << endl;
+			}
 		}
 	}
-	cout << "Yes" << endl;
 }
