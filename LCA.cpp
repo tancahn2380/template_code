@@ -3,6 +3,7 @@ using namespace std;
 
 //LCA
 //木の2頂点の祖先を求める
+//N,rootの定義に注意
 
 int N, root;
 vector<int> g[101010];
