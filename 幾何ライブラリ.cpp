@@ -39,8 +39,8 @@ struct Point {
 	}
 	//点の大小比較
 	bool operator <(const Point &p)const {
-		if (fabs(add(x, -p.x))<EPS)return y<p.y;
-		return x<p.x;
+		if (fabs(add(x, -p.x)) < EPS)return y < p.y;
+		return x < p.x;
 	}
 	bool operator ==(const Point &p)const {
 		return fabs(x - p.x) < EPS&&fabs(y - p.y) < EPS;
@@ -99,7 +99,7 @@ int ccw(Point p0, Point p1, Point p2) {
 	if (a.det(b) > EPS)return COUNTER_CLOCKWISE;
 	if (a.det(b) < -EPS)return CLOCKWISE;
 	if (a.dot(b) < -EPS)return ONLINE_BACK;
-	if (norm(a)<norm(b))return ONLINE_FRONT;
+	if (norm(a) < norm(b))return ONLINE_FRONT;
 
 	return ON_SEGMENT;
 }
@@ -110,6 +110,24 @@ bool intersect(Point p1, Point p2, Point p3, Point p4) {
 }
 bool intersect(Segment s1, Segment s2) {
 	return intersect(s1.p1, s1.p2, s2.p1, s2.p2);
+}
+
+static const int ICC_SEPERATE = 4;
+static const int ICC_CIRCUMSCRIBE = 3;
+static const int ICC_INTERSECT = 2;
+static const int ICC_INSCRIBE = 1;
+static const int ICC_CONTAIN = 0;
+
+//円と円の交差判定
+int intersect(Circle c1, Circle c2) {
+	if (c1.r<c2.r) swap(c1, c2);
+	double d = abs(c1.c - c2.c);
+	double r = c1.r + c2.r;
+	if (d == r) return ICC_CIRCUMSCRIBE;
+	if (d>r) return ICC_SEPERATE;
+	if (d + c2.r== c1.r) return ICC_INSCRIBE;
+	if (d + c2.r<c1.r) return ICC_CONTAIN;
+	return ICC_INTERSECT;
 }
 
 //ベクトルa,bの直交判定
@@ -170,12 +188,11 @@ double getDistance(Segment s1, Segment s2) {
 }
 
 //線分s1と線分s2の交点
-Point getCrossPoint(Segment s1, Segment s2) {
-	Vector base = s2.p2 - s2.p1;
-	double d1 = abs(base.det(s1.p1 - s2.p1));
-	double d2 = abs(base.det(s1.p2 - s2.p1));
-	double t = d1 / (d1 + d2);
-	return s1.p1 + (s1.p2 - s1.p1)*t;
+Point getCrossPoint(Segment l, Segment m) {
+	double d1 = (l.p2 - l.p1).det( m.p2 - m.p1);
+	double d2 = (l.p2 - l.p1).det( l.p2 - m.p1);
+	if (abs(d1) < EPS && abs(d2) < EPS) return m.p1;
+	return m.p1 + (m.p2 - m.p1) * d2 / d1;
 }
 
 //円cと線分lの交点
@@ -196,6 +213,13 @@ pair<Point, Point>getCrossPoints(Circle c1, Circle c2) {
 	return make_pair(c1.c + polar(c1.r, t + a), c1.c + polar(c1.r, t - a));
 }
 
+
+//点pを通る円cの接線
+pair< Point, Point > tangent( Circle c1, Point p2) {
+	pair<Point, Point> d = getCrossPoints(c1, Circle(p2, sqrt(norm(c1.c - p2) - c1.r * c1.r)));
+	return  minmax(d.first, d.second);
+
+}
 //点の内包 0:in,1:on,2:out
 int contains(Polygon g, Point p) {
 	int n = g.size();
@@ -210,60 +234,166 @@ int contains(Polygon g, Point p) {
 }
 
 //凸包を求める
-Polygon convex_hull(Polygon s,bool on_seg) {
+Polygon convex_hull(Polygon s) {
 	Polygon u, l;
-	if (s.size() < 3) {
-		return s;
+	if (s.size() <= 2)return s;
+	sort(s.begin(), s.end(), [](const Point &p1, const Point &p2) {return p1.y == p2.y ? p1.x<p2.x : p1.y<p2.y; });
+	u.push_back(s[0]);
+	u.push_back(s[1]);
+	l.push_back(s[s.size() - 1]);
+	l.push_back(s[s.size() - 2]);
+
+	for (int i = 2; i<s.size(); i++){
+		for (int n = u.size(); n >= 2 && ccw(u[n - 2], u[n - 1], s[i]) != CLOCKWISE&&ccw(u[n - 2], u[n - 1], s[i]) != ONLINE_FRONT; n--){
+			u.pop_back();
+		}
+		u.push_back(s[i]);
 	}
-	sort(s.begin(), s.end());//x,yを基準に昇順ソート
 
-	//xが小さいものから2つuに追加
-	u.emplace_back(s[0]);
-	u.emplace_back(s[1]);
-	//xが大きいものから2つlに追加
-	l.emplace_back(s[s.size()-1]);
-	l.emplace_back(s[s.size()-2]);
-
-	if (on_seg) {
-
-		//凸包の上部を生成
-		for (int i = 2; i < s.size(); i++) {
-			for (int n = u.size(); n >= 2 && ccw(u[n - 2], u[n - 1], s[i]) == COUNTER_CLOCKWISE; n--) {
-				u.pop_back();
-			}
-			u.emplace_back(s[i]);
+	for (int i = s.size() - 3; i >= 0; i--){
+		for (int n = l.size(); n >= 2 && ccw(l[n - 2], l[n - 1], s[i]) != CLOCKWISE&&ccw(l[n - 2], l[n - 1], s[i]) != ONLINE_FRONT; n--){
+			l.pop_back();
 		}
-
-		//凸包の下部を生成
-		for (int i = s.size() - 3; i >= 0; i--) {
-			for (int n = l.size(); n >= 2 && ccw(l[n - 2], l[n - 1], s[i]) == COUNTER_CLOCKWISE; n--) {
-				l.pop_back();
-			}
-			l.emplace_back(s[i]);
-		}
+		l.push_back(s[i]);
 	}
-	else {
-		//凸包の上部を生成
-		for (int i = 2; i < s.size(); i++) {
-			for (int n = u.size(); n >= 2 && ccw(u[n - 2], u[n - 1], s[i]) != CLOCKWISE; n--) {
-				u.pop_back();
-			}
-			u.emplace_back(s[i]);
-		}
 
-		//凸包の下部を生成
-		for (int i = s.size() - 3; i >= 0; i--) {
-			for (int n = l.size(); n >= 2 && ccw(l[n - 2], l[n - 1], s[i]) != CLOCKWISE; n--) {
-				l.pop_back();
-			}
-			l.emplace_back(s[i]);
-		}
-	}
-	//時計回りになるように凸包の点の列を生成
 	reverse(l.begin(), l.end());
-	for (int i = u.size() - 2; i >= 1; i--) {
-		l.push_back(u[i]);
-	}
+	for (int i = u.size() - 2; i >= 1; i--)l.push_back(u[i]);
+
 	return l;
+}
+
+//y座標の昇順でマージするための比較関数
+bool compare_y(Point a, Point b) {
+	return a.y < b.y;
+}
+
+//最近点対
+double closest_pair(Point *a, int n) {
+	if (n <= 1)return INF<double>();
+	sort(a, a + n);
+	int m = n / 2;
+	double x = a[m].x;
+	double d = min({ closest_pair(a,m),closest_pair(a + m,n - m) });//p,qが違う区間にある
+	inplace_merge(a, a + m, a + n, compare_y);//2つのソートされた列をマージ
+
+											  //p,qが同じ区間にある
+	Points b;//直線から距離d未満の頂点を入れていく
+	for (int i = 0; i < n; i++) {
+		if (add(fabs(add(a[i].x, -x)), -d) >= 0.0)continue;
+
+		//bに入っている頂点を、末尾からy座標の差がd以上になるまで見ていく
+		for (int j = 0; j < b.size(); j++) {
+			Point dd;
+			dd.x = add(a[i].x, -b[b.size() - j - 1].x);
+			dd.y = add(a[i].y, -b[b.size() - j - 1].y);
+			if (add(dd.y, -d) >= 0.0)break;
+			d = min(d, abs(dd));
+		}
+		b.emplace_back(a[i]);
+	}
+	return d;
+}
+
+//多角形の面積
+double area(Polygon p) {
+	int n = p.size();
+	double sum = 0.0;
+	for (int i = 0; i < n; i++) {
+		sum = add(sum,0.5*p[i].det(p[(i + 1) % n]));
+	}
+	return sum < 0.0 ? -sum : sum;
+}
+
+//凸性判定
+bool is_convex(Polygon p) {
+	for (int i = 0; i < p.size(); i++) {
+		if (ccw(p[(i - 1 + p.size()) % p.size()], p[i], p[(i + 1) % p.size()]) == -1)return false;
+	}
+	return true;
+}
+
+//切断
+Polygon convex_cut(Polygon p, Line l) {
+	Polygon ret;
+	for (int i = 0; i < p.size(); i++) {
+		Point cur = p[i], nxt = p[(i + 1) % p.size()];
+		if (ccw(l.p1, l.p2, cur) != -1)ret.emplace_back(cur);
+		if (ccw(l.p1, l.p2, cur)*ccw(l.p1, l.p2, nxt) < 0) {
+			Segment seg;
+			seg.p1 = cur;
+			seg.p2 = nxt;
+			ret.emplace_back(getCrossPoint(seg, l));
+		}
+	}
+	return ret;
+}
+
+//端点の種類
+# define BOTTOM 0
+# define LEFT 1
+# define RIGHT 2
+# define TOP 3
+
+class EndPoint {
+public:
+	Point p;
+	int seg, st;//入力線分のID,端点の種類
+	EndPoint() {}
+	EndPoint(Point p, int seg, int st) :p(p), seg(seg), st(st) {}
+
+	bool operator <(const EndPoint &ep)const {
+		//y座標が小さい順に整列
+		if (p.y == ep.p.y) {
+			return st < ep.st;//yが同一の場合は、下端点、左端点、右端点、上端点の順に調べる
+		}
+		else {
+			return p.y < ep.p.y;
+		}
+	}
+};
+
+EndPoint EP[202020];//端点のリスト
+
+//線分交差問題（マンハッタン幾何）
+
+int ManhattanIntersection(vector<Segment> s) {
+	int n = s.size();
+	for (int i = 0, k = 0; i < n; i++) {
+		//端点p1,p2が左下を基準に並ぶように調整
+		if (s[i].p1.y == s[i].p2.y) {
+			if(s[i].p1.x>s[i].p2.x)swap(s[i].p1, s[i].p2);
+		}
+		else if (s[i].p1.y > s[i].p2.y)swap(s[i].p1, s[i].p2);
+
+		if (s[i].p1.y == s[i].p2.y) {//水平線分を端点リストに追加
+			EP[k++] = EndPoint(s[i].p1, i, LEFT);
+			EP[k++] = EndPoint(s[i].p2, i, RIGHT);
+		}
+		else {//垂直線分を端点リストに追加
+			EP[k++] = EndPoint(s[i].p1, i, BOTTOM);
+			EP[k++] = EndPoint(s[i].p2, i, TOP);
+		}
+	}
+	sort(EP, EP + 2 * n);//端点のy座標に関して昇順に整列
+
+	set<LL> bt;//二分探索木
+	bt.insert(1010101010);
+	int cnt = 0;
+
+	for (int i = 0; i < 2 * n; i++) {
+		if (EP[i].st == TOP) {
+			bt.erase(EP[i].p.x);//上端点を削除
+		}
+		else if (EP[i].st == BOTTOM) {
+			bt.insert(EP[i].p.x);
+		}
+		else if (EP[i].st == LEFT) {
+			set<LL>::iterator b = bt.lower_bound(s[EP[i].seg].p1.x);
+			set<LL>::iterator e = bt.upper_bound(s[EP[i].seg].p2.x);
+			cnt += distance(b, e);//bとeの距離（点の数）を加算
+		}
+	}
+	return cnt;
 }
 
