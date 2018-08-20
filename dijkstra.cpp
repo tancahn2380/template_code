@@ -7,7 +7,7 @@ typedef pair<LL, LL> pii;
 
 //dijkstra
 //startからの最小コストをdに入れる
-// V,Eの定義に注意する
+// V,E,startの定義に注意する
 
 int V, E;
 struct edge { LL to, cost; };
