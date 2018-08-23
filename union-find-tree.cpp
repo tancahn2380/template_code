@@ -2,48 +2,6 @@
 
 using namespace std;
 
-//unionfind
-//initを最初に実行しておくこと
-
-int Par[100000];   //親
-int Rank[100000];  //木の深さ
-
-//n要素で初期化
-void init(int n) {
-	for (int i = 0; i < n; i++) {
-		Par[i] = i;
-		Rank[i] = 0;
-	}
-}
-
-//木の根を求める
-int find(int x) {
-	if (Par[x] == x) {
-		return x;
-	}
-	else {
-		return Par[x] = find(Par[x]);
-	}
-}
-
-//xとyの属する集合を併合
-void unite(int  x, int y) {
-	x = find(x);
-	y = find(y);
-	if (x == y) return;
-	if (Rank[x] < Rank[y]) {
-		Par[x] = y;
-	}
-	else {
-		Par[y] = x;
-		if (Rank[x] == Rank[y])Rank[x]++;
-	}
-}
-
-bool same(int x, int y) {
-	return find(x) == find(y);
-}
-/* コピペ用
 struct UnionFind {
 	vector<int>Par, Rank;
 	UnionFind(int n) {
@@ -95,7 +53,7 @@ int main() {
 		else cout << uf.same(b, c) << endl;
 	}
 }
-*/
+
 
 //satanic0258
 /*
