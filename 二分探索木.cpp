@@ -1,69 +1,113 @@
-struct node {
-	LL val;
-	node *lch, *rch;
+class node {
+public:
+	int key;
+	node *parent, *lch, *rch;
 };
 
-//数xを追加
-node *insert(node *p, int x) {
-	if (p == NULL) {
-		node *q = new node;
-		q->val = x;
-		q->lch = q->rch = NULL;
-		return q;
+node *NIL, *root;
+
+void insert(int v) {
+	node *y = NIL, *x = root, *z = new node;
+	z->key = v; z->lch = z->rch = NIL;
+	while (x != NIL) {
+		y = x;
+		if (z->key < x->key)x = x->lch;
+		else x = x->rch;
 	}
-	else {
-		if (x < p->val)p->lch = insert(p->lch, x);
-		else p->rch = insert(p->rch, x);
-		return p;
-	}
+	z->parent = y;
+	if (y == NIL)root = z;
+	else if (z->key < y->key)y->lch = z;
+	else y->rch = z;
+	return;
 }
 
-//値xを検索
-bool find(node *p, int x) {
-	if (p == NULL)return false;
-	else if (x == p->val)return true;
-	else if (x < p->val)return find(p->lch, x);
-	else return find(p->rch, x);
+node* find(int k) {
+	node *x = root;
+	while (x != NIL&&k != x->key) {
+		if (k < x->key)x = x->lch;
+		else x = x->rch;
+	}
+	return x;
 }
 
-//値xを削除
-node *remove(node *p, int x) {
-	if (p == NULL)return NULL;
-	else if (x < p->val)p->lch = remove(p->lch, x);
-	else if (x > p->val)p->rch = remove(p->rch, x);
-	else if (p->lch == NULL) {
-		node *q = p->rch;
-		delete p;
-		return q;
+node* next(node *z) {
+	node *x, *y;
+	if (z->rch != NIL) {
+		x = z->rch;
+		while (x->lch != NIL)x = x->lch;
+		return x;
 	}
-	else if (p->lch->lch == NULL) {
-		node *q = p->lch;
-		q->rch = p->rch;
-		delete p;
-		return q;
+
+	y = z->parent;
+	while (y != NIL&&x == y->rch) {
+		x = y;
+		y = y->parent;
 	}
-	else {
-		node *q;
-		for (q = p->lch; q->rch->rch != NULL; q = q->rch);
-		node *r = q->rch;
-		q->rch = r->lch;
-		r->lch = p->lch;
-		r->rch = p->rch;
-		delete p;
-		return q;
-	}
+	return y;
 }
 
-node *root = NULL;
+void remove(node *z) {
+	node *y, *x;
+	if (z->lch == NIL || z->rch == NIL)y = z;
+	else y = next(z);
 
-void inorder(node *p) {
-	if(p->lch!=NULL)inorder(p->lch);
-	cout << " " << p->val;
-	if(p->rch!=NULL)inorder(p->rch);
+	if (y->lch != NIL)x = y->lch;
+	else x = y->rch;
+
+	if (x != NIL)x->parent = y->parent;
+
+	if (y->parent == NIL)root = x;
+	else if (y == y->parent->lch)y->parent->lch = x;
+	else y->parent->rch = x;
+
+	if (y != z)z->key = y->key;
+	delete(y);
+	return;
 }
 
-void preorder(node *p) {
-	cout << " " << p->val;
-	if (p->lch != NULL)preorder(p->lch);
-	if (p->rch != NULL)preorder(p->rch);
+void ino(node *u) {
+	if (u == NIL)return;
+	ino(u->lch);
+	cout << " " << u->key;
+	ino(u->rch);
+	return;
+}
+
+void preo(node *u) {
+	if (u == NIL)return;
+	cout << " " << u->key;
+	preo(u->lch);
+	preo(u->rch);
+	return;
+}
+
+void print() {
+	ino(root);
+	cout << endl;
+	preo(root);
+	cout << endl;
+	return;
+}
+
+int main() {
+	int n; cin >> n;
+	string s; node *a;
+	while (cin >> s) {
+		if (s == "insert") {
+			cin >> n;
+			insert(n);
+		}
+		else if (s == "find") {
+			cin >> n;
+			a = find(n);
+			if (a != NIL)cout << "yes" << endl;
+			else cout << "no" << endl;
+		}
+		else if (s == "delete") {
+			cin >> n;
+			remove(find(n));
+		}
+		else if (s == "print")print();
+	}
+	return 0;
 }
