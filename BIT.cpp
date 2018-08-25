@@ -12,7 +12,7 @@ struct BIT {
 		for (int i = 0; i < n + 10; i++)bit[i] = 0;
 	}
 	//[0,i)
-	int sum(int i) {
+	LL sum(int i) {
 		LL s = 0;
 		for (int x = i - 1; x >= 0; x = (x&(x + 1)) - 1) {
 			s += bit[x];
@@ -36,7 +36,7 @@ struct BIT {
 		bit.resize(n+10);
 		for (int i = 0; i < n; i++)bit[i] = 0;
 	}
-	int sum(int i) {
+	LL sum(int i) {
 		LL s = 0;
 		while (i>0) {
 			s += bit[i];
