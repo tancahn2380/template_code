@@ -2,7 +2,7 @@
 using namespace std;
 using LL = long long;
 
-cpnst LL MOD = 1000000007;
+const LL MOD = 1000000007;
 LL combi(LL N_, LL C_) {
 	const int NUM_ = 400001;
 	static LL fact[NUM_ + 1], factr[NUM_ + 1], inv[NUM_ + 1];
