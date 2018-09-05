@@ -14,7 +14,7 @@ LL combi(LL N_, LL C_) {
 	if (C_<0 || C_>N_) return 0;
 	return factr[C_] * fact[N_] % MOD*factr[N_ - C_] % MOD;
 }
-//K個のものから重複を許してN個選ぶ時の組み合わせ
+
 LL hcomb(int P_, int Q_) { return (P_ == 0 && Q_ == 0) ? 1 : combi(P_ + Q_ - 1, Q_); }
 
 LL modpow(LL a, LL n = MOD - 2) {
