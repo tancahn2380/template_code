@@ -55,7 +55,7 @@ vector<LL> PrimeFact(LL n) {
 			continue;
 		}
 		bool prime_flag = false;
-		for (int i = 2; i*i <= n; i++) {
+		for (LL i = 2; i*i <= n; i++) {
 			if (n%i == 0) {
 				res.emplace_back(i); n /= i;
 				prime_flag = true;

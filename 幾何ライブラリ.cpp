@@ -233,7 +233,7 @@ int contains(Polygon g, Point p) {
 	return (x ? 2 : 0);
 }
 
-//凸包を求める
+//凸包を求める(辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに)
 Polygon convex_hull(Polygon s) {
 	Polygon u, l;
 	if (s.size() <= 2)return s;
