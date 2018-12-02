@@ -20,10 +20,20 @@ int main() {
 	cout << lower_bound(dp, dp + n, INF) - dp << endl;
 }
 
-int lis(vector<int> &v) {
-	vector<int> ans(v.size(), INF);
+int lis(vector<LL> &v) {
+	vector<LL> ans(v.size(), HINF<LL>());
 	for (int i = 0; i < v.size();i++) {
 		(*lower_bound(ans.begin(), ans.end(), v[i])) = v[i];
 	}
-	return lower_bound(ans.begin(), ans.end(), INF) - ans.begin();
+	return lower_bound(ans.begin(), ans.end(), HINF<LL>()) - ans.begin();
+}
+
+//広義短調増加
+
+int lis(vector<LL> &v) {
+	vector<LL> ans(v.size(), HINF<LL>());
+	for (int i = 0; i < v.size(); i++) {
+		(*upper_bound(ans.begin(), ans.end(), v[i])) = v[i];
+	}
+	return lower_bound(ans.begin(), ans.end(), HINF<LL>()) - ans.begin();
 }
