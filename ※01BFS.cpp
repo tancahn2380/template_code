@@ -4,7 +4,7 @@ using LL = long long;
 template<class T>constexpr T INF() {return ::std::numeric_limits<T>::max();}
 
 //01BFS
-//辺のコストが0,1だけの時に使える
+//辺のコストが0,1だけの時に使えるよ
 
 const int MAX_V = 100000;
 struct edge { int to, cost; };
