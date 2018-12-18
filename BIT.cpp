@@ -1,4 +1,5 @@
 # include "bits/stdc++.h"
+using LL = long long;
 using namespace std;
 
 //BIT
