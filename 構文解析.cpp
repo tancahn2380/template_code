@@ -62,6 +62,7 @@ int factor(State &Begin){
     }else{
         return number(Begin);
     }
+    return ret;
 }
 
 int n;
