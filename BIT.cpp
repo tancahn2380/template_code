@@ -52,8 +52,3 @@ struct BIT {
 		}
 	}
 };
-
-int main() {
-	BIT bit(n);
-	cout << bit.sum(5) << endl;
-}
