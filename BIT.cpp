@@ -21,7 +21,7 @@ struct BIT {
 		return s;
 	}
 	void add(int a, LL w) {
-		for (int x = a; x < bit.size(); x |= x + 1) {
+		for (int x = a; x < (int)bit.size(); x |= x + 1) {
 			bit[x] += w;
 		}
 	}
