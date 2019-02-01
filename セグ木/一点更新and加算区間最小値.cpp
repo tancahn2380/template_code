@@ -44,8 +44,8 @@ public:
         if(r <= a || b <= l) return INF<T>();
         if(a <= l && r <= b) return node[k];
 
-        int vl = getmin(a, b, 2*k + 1, l, (l + r)/2);
-        int vr = getmin(a, b, 2*k + 2, (l + r)/2, r);
+        T vl = getmin(a, b, 2*k + 1, l, (l + r)/2);
+        T vr = getmin(a, b, 2*k + 2, (l + r)/2, r);
         return min(vl, vr);
     }
 };

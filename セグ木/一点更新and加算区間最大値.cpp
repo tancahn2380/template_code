@@ -13,7 +13,7 @@ public:
     SegmentTree(vector<T> v) {
         int sz = v.size();
         n = 1; while(n < sz) n *= 2;
-        node.resize(2*n - 1, INF<T>());
+        node.resize(2*n - 1, -INF<T>());
         for(int i = 0; i < sz; i++) node[i + n - 1] = v[i];
         for(int i = n - 2; i >= 0; i--) node[i] = max(node[2*i + 1], node[2*i + 2]);
     }
@@ -44,8 +44,8 @@ public:
         if(r <= a || b <= l) return -INF<T>();
         if(a <= l && r <= b) return node[k];
 
-        int vl = getmax(a, b, 2*k + 1, l, (l + r)/2);
-        int vr = getmax(a, b, 2*k + 2, (l + r)/2, r);
+        T vl = getmax(a, b, 2*k + 1, l, (l + r)/2);
+        T vr = getmax(a, b, 2*k + 2, (l + r)/2, r);
         return max(vl, vr);
     }
 };
