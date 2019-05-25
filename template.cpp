@@ -22,4 +22,3 @@ LL lcm(LL a, LL b) { LL g = gcd(a, b); return a / g*b; };
 # define FOR(i,tptpt,ypypy)   for(LL i=(tptpt);i<(ypypy);i++)
 # define REP(i,upupu)         FOR(i,0,upupu)
 # define INIT                 std::ios::sync_with_stdio(false);std::cin.tie(0)
-# pragma warning(disable:4996)
