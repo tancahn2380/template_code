@@ -77,3 +77,10 @@ bool isprime(LL x) {
 	}
 	return true;
 }
+
+map<LL,int> primefact(LL n) {
+	map<LL,int> ret;
+	for(LL i = 2;i*i <= n;i++) while(n % i == 0) ret[i]++,n/=i;
+	if(n>1) ret[n]++;
+	return ret;
+}
