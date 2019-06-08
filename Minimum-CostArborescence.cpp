@@ -1,4 +1,5 @@
 #include "bits/stdc++.h"
+template<class T>constexpr T INF() { return ::std::numeric_limits<T>::max(); }
 using namespace std;
 
 struct UnionFind {
@@ -74,7 +75,7 @@ int n, m, R;
 vector<edge> edges;
 
 Heap *come[101010];//圧縮されたグラフ上で、その点に入ってくる辺をコストの小さい順に管理するヒープ
-int used[101010];//  0:未処理,1:処理中,2:完成[
+int used[101010];//  0:未処理,1:処理中,2:完成
 int from_cost[101010];//作っている木においてその点に入ってくる辺の圧縮されたグラフ上のコスト
 int from[101010];//作っている木においてその点に入ってくる辺の圧縮されたグラフ上のfrom
 
@@ -140,7 +141,7 @@ int Minimum_CostArborescence(int r) {//rを根とする最小全域有向木の�
 
 int main() {
 	cin >> n >> m >> R;
-	REP(i, m) {
+	for(int i = 0; i < m;i++) {
 		int s, t, c;
 		cin >> s >> t >> c;
 		edges.emplace_back(s, t, c);
