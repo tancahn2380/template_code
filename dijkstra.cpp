@@ -9,7 +9,6 @@ typedef pair<LL, LL> pii;
 //startからの最小コストをdに入れる
 // V,E,startの定義に注意する
 
-int V, E;
 struct edge { LL to, cost; };
 int start;
 LL d[100100]; //距離
