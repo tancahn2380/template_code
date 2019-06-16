@@ -1,9 +1,5 @@
-#include "bits/stdc++.h"
+# include "bits/stdc++.h"
 using namespace std;
-
-//このファイルを変更したときに変更すべきもの
-//2-SAT.cpp
-
 
 struct SCC{
 private:
@@ -66,5 +62,32 @@ public:
 		    if (!used[vs[i]])rdfs(vs[i], k++);
 	    }
 	    return k;
+    }
+};
+
+struct two_sat{
+private:
+    int v;
+    SCC sc;
+public:
+    vector<int> val;
+    two_sat(int V){
+        v = V*2;
+        val.resize(v/2);
+        sc.init(v);
+    }
+    void add_edge(int f, int t){
+        sc.add_edge((f + v/2)%v, t);
+        sc.add_edge((t + v/2)%v, f);
+    }
+    bool sat(){
+        sc.scc();
+        for(int i = 0;i < v/2;i++){
+            if(sc.cmp[i] == sc.cmp[i + v/2])return false;
+        }
+        for(int i = 0;i < v/2;i++){
+            val[i] = sc.cmp[i] > sc.cmp[i + v/2];
+        }
+        return true;
     }
 };
