@@ -24,7 +24,7 @@ void dijkstra() {
 		pq.pop();
 		int i = p.second;
 		if (d[i] < p.first)continue;
-		for (int k = 0; k < vec[i].size(); k++) {
+		for (int k = 0; k < (int)vec[i].size(); k++) {
 			edge e = vec[i][k];
 			if (d[e.to] <= d[i] + e.cost)continue;
 			d[e.to] = d[i] + e.cost;

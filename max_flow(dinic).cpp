@@ -40,7 +40,7 @@ void bfs(int s) {
 
 LL dfs(int v, int t, LL f) {
 	if (v == t)return f;
-	for (int &i = iter[v]; i < G[v].size(); i++) {
+	for (int &i = iter[v]; i < (int)G[v].size(); i++) {
 		edge &e = G[v][i];
 		if (e.cap > 0 && level[v] < level[e.to]) {
 			int d = dfs(e.to, t, min(f, e.cap));
