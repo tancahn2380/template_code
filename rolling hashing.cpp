@@ -1,4 +1,4 @@
-#include "bits/stdc++/h"
+#include "bits/stdc++.h"
 using namespace std;
 using LL = long long;
 using ULL = unsigned long long;
@@ -11,12 +11,12 @@ bool contain(string a, string b) {
 	if (al > bl)return false;
 
 	//Bのal乗を計算
-	ULL t[] = { 1 ,1 };
+	ULL t[] = { 1ULL ,1ULL };
 	for (int i = 0; i < al; i++)t[0] *= B[0];
 	for (int i = 0; i < al; i++)t[1] *= B[1];
 
 	//aとbの最初のal文字に関するハッシュ値を計算
-	ULL ah[] = { 0 ,0 }, bh[] = { 0 ,0 };
+	ULL ah[] = { 0ULL ,0ULL }, bh[] = { 0ULL ,0ULL };
 	for (int i = 0; i < al; i++)ah[0] = ah[0] * B[0] + a[i];
 	for (int i = 0; i < al; i++)bh[0] = bh[0] * B[0] + b[i];
 	for (int i = 0; i < al; i++)ah[1] = ah[1] * B[1] + a[i];
@@ -34,10 +34,10 @@ bool contain(string a, string b) {
 }
 
 
-const ULL B[] = { 999999937ULL,1000000007ULL };
+//const ULL B[] = { 999999937ULL,1000000007ULL };
 
 //aはbにいくつ含まれているか?O(|b|)
-int contain(string a, string b) {
+/*int contain(string a, string b) {
 	
 	int ret = 0;
 
@@ -89,4 +89,9 @@ struct rolling_hash{
 		if(l > r)return 0;
 		return h[r] - h[l]*t[r - l];
 	}
-};
+};*/
+string s, t;
+int main(){
+	cin >> s >> t;
+	cout << contain(t, s) << endl;
+}

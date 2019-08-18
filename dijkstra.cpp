@@ -11,7 +11,7 @@ typedef pair<LL, LL> pii;
 
 struct edge { LL to, cost; };
 int start;
-LL d[100100]; //距離
+LL d[100100];
 vector<edge> vec[100100];
 
 void dijkstra() {
@@ -32,6 +32,7 @@ void dijkstra() {
 		}
 	}
 }
+
 
 
 
