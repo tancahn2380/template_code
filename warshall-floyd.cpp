@@ -5,7 +5,7 @@ template<class T>constexpr T INF() { return ::std::numeric_limits<T>::max(); }
 template<class T>constexpr T HINF() { return INF<T>() / 2; }
 const int MAX_V=10;
 
-
+//Vの初期化に注意
 LL d[MAX_V][MAX_V];
 int V;
 
