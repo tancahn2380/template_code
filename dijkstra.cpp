@@ -3,7 +3,6 @@ using namespace std;
 using LL = long long;
 template<class T>constexpr T INF() {return ::std::numeric_limits<T>::max();}
 template<class T>constexpr T HINF() { return INF<T>() / 2; }
-typedef pair<LL, LL> pii;
 
 //dijkstra
 //startからの最小コストをdに入れる
@@ -16,11 +15,11 @@ vector<edge> vec[100100];
 
 void dijkstra() {
 	for (int i = 0; i < 100100; i++)d[i] = HINF<LL>();
-	priority_queue<pii, std::vector<pii>, std::greater<pii>> pq;
+	priority_queue<pair<int, int>, std::vector<pair<int, int>>, std::greater<pair<int, int>>> pq;
 	d[start] = 0;
 	pq.push(make_pair(d[start], start));//cost,to
 	while (!pq.empty()) {
-		pii p = pq.top();
+		pair<int, int> p = pq.top();
 		pq.pop();
 		int i = p.second;
 		if (d[i] < p.first)continue;
