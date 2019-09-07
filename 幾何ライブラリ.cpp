@@ -234,31 +234,33 @@ int contains(Polygon g, Point p) {
 }
 
 //凸包を求める(辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに)
-Polygon convex_hull(Polygon s) {
+//凸包を求める(辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに)
+Polygon convex_hull(Polygon s){
 	Polygon u, l;
-	if (s.size() <= 2)return s;
-	sort(s.begin(), s.end(), [](const Point &p1, const Point &p2) {return p1.y == p2.y ? p1.x<p2.x : p1.y<p2.y; });
-	u.push_back(s[0]);
-	u.push_back(s[1]);
-	l.push_back(s[s.size() - 1]);
-	l.push_back(s[s.size() - 2]);
+	if((int)s.size() < 3)return s;
+	sort(s.begin(), s.end());
+	u.emplace_back(s[0]);
+	u.emplace_back(s[1]);
+	l.emplace_back(s[(int)s.size() - 1]);
+	l.emplace_back(s[(int)s.size() - 2]);
 
-	for (int i = 2; i<s.size(); i++){
-		for (int n = u.size(); n >= 2 && ccw(u[n - 2], u[n - 1], s[i]) != CLOCKWISE&&ccw(u[n - 2], u[n - 1], s[i]) != ONLINE_FRONT; n--){
+	//辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに
+	for(int i = 2;i < (int)s.size();i++){
+		for(int n = (int)u.size();n >= 2 && ccw(u[n - 2], u[n - 1], s[i]) != CLOCKWISE;n--){
 			u.pop_back();
 		}
-		u.push_back(s[i]);
+		u.emplace_back(s[i]);
 	}
 
-	for (int i = s.size() - 3; i >= 0; i--){
-		for (int n = l.size(); n >= 2 && ccw(l[n - 2], l[n - 1], s[i]) != CLOCKWISE&&ccw(l[n - 2], l[n - 1], s[i]) != ONLINE_FRONT; n--){
+	//辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに
+	for(int i = (int)s.size() - 3;i >= 0;i--){
+		for(int n = l.size();n >= 2 && ccw(l[n - 2], l[n - 1], s[i]) != CLOCKWISE;n--){
 			l.pop_back();
 		}
-		l.push_back(s[i]);
+		l.emplace_back(s[i]);
 	}
-
 	reverse(l.begin(), l.end());
-	for (int i = u.size() - 2; i >= 1; i--)l.push_back(u[i]);
+	for(int i = (int)u.size() - 2;i >= 1;i--)l.emplace_back(u[i]);
 
 	return l;
 }
