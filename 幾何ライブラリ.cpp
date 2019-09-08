@@ -1,6 +1,3 @@
-#include "bits/stdc++.h"
-using namespace std;
-
 //定義系
 
 double EPS = 1e-10;
@@ -65,6 +62,9 @@ struct Segment {
 	Point p1, p2;
 };
 
+//線分集合
+typedef vector<Segment> Segments;
+
 //直線
 typedef Segment Line;
 
@@ -80,9 +80,6 @@ typedef vector<Point> Polygon;
 
 //頂点集合
 typedef vector<Point> Points;
-
-
-
 
 //計算・アルゴリズム系
 
@@ -108,10 +105,13 @@ int ccw(Point p0, Point p1, Point p2) {
 bool intersect(Point p1, Point p2, Point p3, Point p4) {
 	return (ccw(p1, p2, p3)*ccw(p1, p2, p4) <= 0 && ccw(p3, p4, p1)*ccw(p3, p4, p2) <= 0);
 }
-bool intersect(Segment s1, Segment s2) {
+bool intersectSS(Segment s1, Segment s2) {
 	return intersect(s1.p1, s1.p2, s2.p1, s2.p2);
 }
-
+bool intersectLS(Line l, Segment s){
+	return ccw(l.p1, l.p2, s.p1)*ccw(l.p1, l.p2, s.p2) <= 0;
+}
+//直線
 static const int ICC_SEPERATE = 4;
 static const int ICC_CIRCUMSCRIBE = 3;
 static const int ICC_INTERSECT = 2;
@@ -183,7 +183,7 @@ double getDistanceSP(Segment s, Point p) {
 
 //線分s1と線分s2の距離
 double getDistance(Segment s1, Segment s2) {
-	if (intersect(s1, s2))return 0.0;
+	if (intersectSS(s1, s2))return 0.0;
 	return min({ getDistanceSP(s1, s2.p1), getDistanceSP(s1, s2.p2), getDistanceSP(s2, s1.p1), getDistanceSP(s2, s1.p2) });
 }
 
@@ -234,7 +234,6 @@ int contains(Polygon g, Point p) {
 }
 
 //凸包を求める(辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに)
-//凸包を求める(辺上も含める場合は!=CLOCKWISEを==COUNTER_CLOCKWISEに)
 Polygon convex_hull(Polygon s){
 	Polygon u, l;
 	if((int)s.size() < 3)return s;
@@ -264,7 +263,6 @@ Polygon convex_hull(Polygon s){
 
 	return l;
 }
-
 //y座標の昇順でマージするための比較関数
 bool compare_y(Point a, Point b) {
 	return a.y < b.y;
@@ -285,7 +283,7 @@ double closest_pair(Point *a, int n) {
 		if (add(fabs(add(a[i].x, -x)), -d) >= 0.0)continue;
 
 		//bに入っている頂点を、末尾からy座標の差がd以上になるまで見ていく
-		for (int j = 0; j < b.size(); j++) {
+		for (int j = 0; j < (int)b.size(); j++) {
 			Point dd;
 			dd.x = add(a[i].x, -b[b.size() - j - 1].x);
 			dd.y = add(a[i].y, -b[b.size() - j - 1].y);
@@ -309,7 +307,7 @@ double area(Polygon p) {
 
 //凸性判定
 bool is_convex(Polygon p) {
-	for (int i = 0; i < p.size(); i++) {
+	for (int i = 0; i < (int)p.size(); i++) {
 		if (ccw(p[(i - 1 + p.size()) % p.size()], p[i], p[(i + 1) % p.size()]) == -1)return false;
 	}
 	return true;
@@ -318,7 +316,7 @@ bool is_convex(Polygon p) {
 //切断
 Polygon convex_cut(Polygon p, Line l) {
 	Polygon ret;
-	for (int i = 0; i < p.size(); i++) {
+	for (int i = 0; i < (int)p.size(); i++) {
 		Point cur = p[i], nxt = p[(i + 1) % p.size()];
 		if (ccw(l.p1, l.p2, cur) != -1)ret.emplace_back(cur);
 		if (ccw(l.p1, l.p2, cur)*ccw(l.p1, l.p2, nxt) < 0) {
@@ -398,4 +396,3 @@ int ManhattanIntersection(vector<Segment> s) {
 	}
 	return cnt;
 }
-
