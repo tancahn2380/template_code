@@ -1,3 +1,6 @@
+# include "bits/stdc++.h"
+using namespace std;
+
 //定義系
 
 double EPS = 1e-10;
