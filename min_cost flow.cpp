@@ -1,15 +1,10 @@
 # include "bits/stdc++.h"
 using namespace std;
 template<class T>constexpr T INF() { return ::std::numeric_limits<T>::max(); }
-
-
 //最小費用龍
-
 typedef pair<int, int> P;//firstは最短距離、secondは頂点の番号
- 
 //revは逆辺
 struct edge { int to, cap, cost, rev; };
- 
 int V; //頂点数
 vector<edge> G[101010];
 int h[101010];//ポテンシャル

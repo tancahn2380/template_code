@@ -64,10 +64,10 @@ vector<int> g[101010];
 
 int main() {
 	cin >> n;
-	REP(i, n) {
+	for(int i = 0;i < n;i++) {
 		int k;
 		cin >> k;
-		REP(j, k) {
+		for(int j = 0;j < k;j++) {
 			int c;
 			cin >> c;
 			g[i].emplace_back(c);
@@ -77,7 +77,7 @@ int main() {
 	LCA lca(n, g, 0);
 	int q;
 	cin >> q;
-	REP(qqq, q) {
+	for(int qqq = 0;qqq < q;qqq++) {
 		int u, v;
 		cin >> u >> v;
 		cout << lca.get(u, v) << endl;

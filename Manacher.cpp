@@ -1,6 +1,7 @@
 # include <bits/stdc++.h>
 using namespace std;
 
+//文字iを中心とする最長の回文の半径
 //O(|S|)
 //http://snuke.hatenablog.com/entry/2014/12/02/235837
 //verified

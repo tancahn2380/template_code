@@ -1,5 +1,6 @@
 #include "bits/stdc++.h"
 using namespace std;
+using LL = long long;
 
 //最大流(Fold-Fulkerson)
 //Vの範囲に注意する

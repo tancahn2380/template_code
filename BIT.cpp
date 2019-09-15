@@ -1,10 +1,6 @@
 # include "bits/stdc++.h"
 using LL = long long;
 using namespace std;
-
-//BIT
-
-//0-indexed
 struct BIT {
 	vector<LL> bit;
 	BIT(LL n) {
