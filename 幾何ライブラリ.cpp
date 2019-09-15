@@ -30,11 +30,11 @@ struct Point {
 		return Point(x / d, y / d);
 	}
 	//内積
-	double dot(Point p) {
+	double inner(Point p) {
 		return add(x*p.x, y*p.y);
 	}
 	//外積
-	double det(Point p) {
+	double cross(Point p) {
 		return add(x*p.y, -y*p.x);
 	}
 	//点の大小比較
@@ -63,6 +63,15 @@ double abs(Vector p) {
 //線分
 struct Segment {
 	Point p1, p2;
+	Segment() {}
+	Segment(Point p1, Point p2) :p1(p1), p2(p2){}
+	double slope(){
+		if(p2 < p1)swap(p1, p2);
+		if(p1.x == p2.x){
+			return -1e-9;
+		}
+		return (p2.y - p1.y)/(p2.x - p1.x);
+	}
 };
 
 //線分集合
@@ -96,9 +105,9 @@ static const int ON_SEGMENT = 0;
 int ccw(Point p0, Point p1, Point p2) {
 	Vector a = p1 - p0;
 	Vector b = p2 - p0;
-	if (a.det(b) > EPS)return COUNTER_CLOCKWISE;
-	if (a.det(b) < -EPS)return CLOCKWISE;
-	if (a.dot(b) < -EPS)return ONLINE_BACK;
+	if (a.inner(b) > EPS)return COUNTER_CLOCKWISE;
+	if (a.cross(b) < -EPS)return CLOCKWISE;
+	if (a.inner(b) < -EPS)return ONLINE_BACK;
 	if (norm(a) < norm(b))return ONLINE_FRONT;
 
 	return ON_SEGMENT;
@@ -135,30 +144,30 @@ int intersect(Circle c1, Circle c2) {
 
 //ベクトルa,bの直交判定
 bool isOrthogonal(Vector a, Vector b) {
-	return a.dot(b) == 0.0;
+	return a.inner(b) == 0.0;
 }
 bool isOrthogonal(Point a1, Point a2, Point b1, Point b2) {
 	return isOrthogonal(a1 - a2, b1 - b2);
 }
 bool isOrthogonal(Segment s1, Segment s2) {
-	return (s1.p2 - s1.p1).dot(s2.p2 - s2.p1) == 0.0;
+	return (s1.p2 - s1.p1).inner(s2.p2 - s2.p1) == 0.0;
 }
 
 //ベクトルa,bの並行判定
 bool isParallel(Vector a, Vector b) {
-	return a.det(b) == 0.0;
+	return a.cross(b) == 0.0;
 }
 bool isParallel(Point a1, Point a2, Point b1, Point b2) {
 	return isParallel(a1 - a2, b1 - b2);
 }
 bool isParallel(Segment s1, Segment s2) {
-	return (s1.p2 - s1.p1).det(s2.p2 - s2.p1) == 0.0;
+	return (s1.p2 - s1.p1).cross(s2.p2 - s2.p1) == 0.0;
 }
 
 //射影(点p1と点p2を通る直線に点pから垂線を引いた交点xを求める)
 Point project(Segment s, Point p) {
 	Vector base = s.p2 - s.p1;
-	double r = (p - s.p1).dot(base) / norm(base);
+	double r = (p - s.p1).inner(base) / norm(base);
 	return s.p1 + base*r;
 }
 
@@ -174,13 +183,13 @@ double getDistance(Point a, Point b) {
 
 //直線lと点pの距離
 double getDistanceLP(Line l, Point p) {
-	return abs((l.p2 - l.p1).det(p - l.p1) / abs(l.p2 - l.p1));
+	return abs((l.p2 - l.p1).cross(p - l.p1) / abs(l.p2 - l.p1));
 }
 
 //線分sと点pの距離
 double getDistanceSP(Segment s, Point p) {
-	if ((s.p2 - s.p1).dot(p - s.p1) < 0.0)return abs(p - s.p1);
-	if ((s.p1 - s.p2).dot(p - s.p2) < 0.0)return abs(p - s.p2);
+	if ((s.p2 - s.p1).inner(p - s.p1) < 0.0)return abs(p - s.p1);
+	if ((s.p1 - s.p2).inner(p - s.p2) < 0.0)return abs(p - s.p2);
 	return getDistanceLP(s, p);
 }
 
@@ -192,8 +201,8 @@ double getDistance(Segment s1, Segment s2) {
 
 //線分s1と線分s2の交点
 Point getCrossPoint(Segment l, Segment m) {
-	double d1 = (l.p2 - l.p1).det( m.p2 - m.p1);
-	double d2 = (l.p2 - l.p1).det( l.p2 - m.p1);
+	double d1 = (l.p2 - l.p1).cross( m.p2 - m.p1);
+	double d2 = (l.p2 - l.p1).cross( l.p2 - m.p1);
 	if (abs(d1) < EPS && abs(d2) < EPS) return m.p1;
 	return m.p1 + (m.p2 - m.p1) * d2 / d1;
 }
@@ -223,15 +232,15 @@ pair< Point, Point > tangent( Circle c1, Point p2) {
 	return  minmax(d.first, d.second);
 
 }
-//点の内包 0:in,1:on,2:out
+//点の内包 0:out,1:on,2:in
 int contains(Polygon g, Point p) {
 	int n = g.size();
 	bool x = false;
 	for (int i = 0; i < n; i++) {
 		Point a = g[i] - p, b = g[(i + 1) % n] - p;
-		if (abs(a.det(b)) < EPS&&a.dot(b) < EPS) return 1;
+		if (abs(a.cross(b)) < EPS&&a.inner(b) < EPS) return 1;
 		if (a.y > b.y)swap(a, b);
-		if (a.y < EPS&&EPS < b.y&&EPS < a.det(b))x = !x;
+		if (a.y < EPS&&EPS < b.y&&EPS < a.cross(b))x = !x;
 	}
 	return (x ? 2 : 0);
 }
@@ -303,7 +312,7 @@ double area(Polygon p) {
 	int n = p.size();
 	double sum = 0.0;
 	for (int i = 0; i < n; i++) {
-		sum = add(sum,0.5*p[i].det(p[(i + 1) % n]));
+		sum = add(sum,0.5*p[i].cross(p[(i + 1) % n]));
 	}
 	return sum < 0.0 ? -sum : sum;
 }
@@ -399,3 +408,4 @@ int ManhattanIntersection(vector<Segment> s) {
 	}
 	return cnt;
 }
+
