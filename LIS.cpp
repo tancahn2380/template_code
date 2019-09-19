@@ -24,7 +24,7 @@ int main() {
 
 int lis(vector<LL> &v) {
 	vector<LL> ans(v.size(), HINF<LL>());
-	for (int i = 0; i < v.size();i++) {
+	for (int i = 0; i < (int)v.size();i++) {
 		(*lower_bound(ans.begin(), ans.end(), v[i])) = v[i];
 	}
 	return lower_bound(ans.begin(), ans.end(), HINF<LL>()) - ans.begin();
