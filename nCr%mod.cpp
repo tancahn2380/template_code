@@ -2,9 +2,11 @@
 using namespace std;
 using LL = long long;
 
+// NUM_の値に要注意
+
 const LL MOD = 1000000007;
 LL combi(LL N_, LL C_) {
-	const int NUM_ = 400001;
+	const int NUM_ = 1010101;
 	static LL fact[NUM_ + 1], factr[NUM_ + 1], inv[NUM_ + 1];
 	if (fact[0] == 0) {
 		inv[1] = fact[0] = factr[0] = 1;

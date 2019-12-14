@@ -8,18 +8,20 @@ template<class T>constexpr T HINF() { return INF<T>() / 2; }
 //startからの最小コストをdに入れる
 // V,E,startの定義に注意する
 
+//型に注意しろよ
+
 struct edge { LL to, cost; };
 int start;
 LL d[100100];
 vector<edge> vec[100100];
-
+ 
 void dijkstra() {
 	for (int i = 0; i < 100100; i++)d[i] = HINF<LL>();
-	priority_queue<pair<int, int>, std::vector<pair<int, int>>, std::greater<pair<int, int>>> pq;
+	priority_queue<pair<LL, int>, std::vector<pair<LL, int>>, std::greater<pair<LL, int>>> pq;
 	d[start] = 0;
 	pq.push(make_pair(d[start], start));//cost,to
 	while (!pq.empty()) {
-		pair<int, int> p = pq.top();
+		pair<LL, int> p = pq.top();
 		pq.pop();
 		int i = p.second;
 		if (d[i] < p.first)continue;

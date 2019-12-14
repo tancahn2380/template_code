@@ -105,7 +105,7 @@ static const int ON_SEGMENT = 0;
 int ccw(Point p0, Point p1, Point p2) {
 	Vector a = p1 - p0;
 	Vector b = p2 - p0;
-	if (a.inner(b) > EPS)return COUNTER_CLOCKWISE;
+	if (a.cross(b) > EPS)return COUNTER_CLOCKWISE;
 	if (a.cross(b) < -EPS)return CLOCKWISE;
 	if (a.inner(b) < -EPS)return ONLINE_BACK;
 	if (norm(a) < norm(b))return ONLINE_FRONT;
