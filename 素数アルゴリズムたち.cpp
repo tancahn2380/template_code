@@ -2,6 +2,31 @@
 using namespace std;
 using LL = long long;
 
+//約数の全列挙
+vector<LL> divisor(LL n){
+    vector<LL> ret;
+    for(LL i = 1;i * i <= n;i++){
+        if(n % i == 0){
+            ret.emplace_back(i);
+            if(n / i != i)ret.emplace_back(n / i);
+        }
+    }
+    return ret;
+}
+
+//素因数の全列挙
+vector<LL> PrimeFact(LL n) {
+	vector<LL> ret;
+    for(int i=2; i*i<=n; i++) {
+        if(n % i == 0) {
+            ret.push_back(i);
+            while(n % i == 0) n /= i;
+        }
+    }
+    if(n != 1) ret.push_back(n);
+    return ret;
+}
+
 //Makeprime(n)を呼びだすとnまでの素数の配列ができる
 
 std::vector<int> prime;
