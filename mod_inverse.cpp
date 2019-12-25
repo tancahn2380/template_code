@@ -11,7 +11,7 @@ LL extgcd(LL a, LL b, LL &x, LL &y) {
     return g;
 }
 
-//a x ≡ m (mod m)
+// mod m ?? a ? ??
 LL mod_inverse(LL a, LL m){
     LL x, y;
     extgcd(a, m, x, y);

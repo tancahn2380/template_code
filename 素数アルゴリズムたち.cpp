@@ -41,6 +41,13 @@ vector<LL> PrimeFact(LL n) {
 	return res;
 }
 
+map<LL,int> primefact(LL n) {
+	map<LL,int> ret;
+	for(LL i = 2;i*i <= n;i++) while(n % i == 0) ret[i]++,n/=i;
+	if(n>1) ret[n]++;
+	return ret;
+}
+
 //単純な素数判定
 
 bool isprime(LL x) {
@@ -52,9 +59,3 @@ bool isprime(LL x) {
 	return true;
 }
 
-map<LL,int> primefact(LL n) {
-	map<LL,int> ret;
-	for(LL i = 2;i*i <= n;i++) while(n % i == 0) ret[i]++,n/=i;
-	if(n>1) ret[n]++;
-	return ret;
-}
