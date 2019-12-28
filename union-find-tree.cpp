@@ -47,20 +47,24 @@ struct UnionFind {
 	vector<int> par, time;
     int now;
 
-    int find(int t, int x){
+    int root(int t, int x){
         if(time[x] > t)return x;
         else if(par[x] < 0)return x;
-        else return find(t, par[x]);
+        else return root(t, par[x]);
+    }
+
+    bool is_root(int t, int x){
+        return root(t, x) == x;
     }
 
     bool same(int t, int x, int y){
-        return find(t, x) == find(t, y);
+        return root(t, x) == root(t, y);
     }
 
     int unite(int x, int y){
         ++now;
-        x = find(now, x);
-        y = find(now, y);
+        x = root(now, x);
+        y = root(now, y);
         if(x == y)return now;
         if(par[x] < par[y])swap(x, y);
         par[x] += par[y];
@@ -80,14 +84,18 @@ struct UnionFind {
     }
 	vector<int> par, rnk;
 
-    int find(int x){
+    int root(int x){
         if(par[x] == x)return x;
-        else return par[x] = find(par[x]);
+        else return par[x] = root(par[x]);
+    }
+
+    bool is_root(int x){
+        return root(x) == x;
     }
 
     void unite(int x, int y){
-        x = find(x);
-        y = find(y);
+        x = root(x);
+        y = root(y);
         if(x == y)return;
         if(rnk[x] < rnk[y]){
             par[x] = y;
@@ -97,6 +105,6 @@ struct UnionFind {
         }
     }
     bool same(int x,int y){
-        return find(x) == find(y);
+        return root(x) == root(y);
     }
 };
